@@ -1,4 +1,7 @@
 #This patch for DWM is meant to be applied after the alpha and xresources patches.
+#currently only working with:
+#colors
+#borderpx, only applies to new windows
 
 diff --git a/config.def.h b/config.def.h
 index d765d7f..da5bb23 100644
