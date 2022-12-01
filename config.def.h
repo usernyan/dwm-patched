@@ -10,6 +10,8 @@ static unsigned int gappov    = 10;       /* vert outer gap between windows and 
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
+#define ICONSIZE 16   /* icon size */
+#define ICONSPACING 5 /* space between icon and title */
 static char font[]            = "monospace:size=10";
 static char dmenufont[]       = "monospace:size=10";
 static const char *fonts[]          = { font };
