@@ -2,6 +2,17 @@ dwm - dynamic window manager
 ============================
 dwm is an extremely fast, small, and dynamic window manager for X.
 
+This version of dwm has the following patches applied (with modifications):
+xresources
+alpha
+pertag
+removeborder
+reloadxresources - A custom patch by me. Press MOD-r to reload Xresources colors.
+actualfullscreen
+vanitygaps - The one with extra layouts.
+cyclelayouts
+stacker - Removed several shortcuts I don't use.
+winicon
 
 Requirements
 ------------
