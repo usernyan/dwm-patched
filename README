@@ -12,7 +12,7 @@ actualfullscreen
 vanitygaps - The one with extra layouts.
 cyclelayouts
 stacker - Removed several shortcuts I don't use.
-winicon
+winicon - You'll need Imlib2 installed
 
 Requirements
 ------------
