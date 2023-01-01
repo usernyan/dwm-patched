@@ -1922,11 +1922,19 @@ togglebar(const Arg *arg)
 	arrange(selmon);
 }
 
+//taken from the toggleborder patch,
+//but modified to remove bugs after studying setborderpx patch's source
 void
 toggleborder(const Arg *arg)
 {
 	if (selmon && selmon->sel) {
-		selmon->sel->bw = (selmon->sel->bw == borderpx ? 0 : borderpx);
+		Client *c = selmon->sel;
+		int prev_bw = c->bw;
+		c->bw = c->bw == borderpx ? 0 : borderpx;
+		int border_adjust = 2*(c->bw - prev_bw);
+		if (prev_bw <= 0)
+			border_adjust = border_adjust * -1;
+		resize(c, c->x, c->y, c->w+border_adjust, c->h+border_adjust, 0);
 		arrange(selmon);
 	}
 }
