@@ -1,0 +1,40 @@
+diff --git a/config.def.h b/config.def.h
+index e79f1eb..599507e 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -126,6 +126,7 @@ static const Key keys[] = {
+ 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+ 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+ 	{ MODKEY,                       XK_b,      togglebar,      {0} },
++	{ MODKEY|ControlMask,           XK_b,      toggleborder,   {0} },
+ 	STACKKEYS(MODKEY,                          focus)
+ 	STACKKEYS(MODKEY|ShiftMask,                push)
+ 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
+diff --git a/dwm.c b/dwm.c
+index 49496aa..12e6701 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -246,6 +246,7 @@ static void tag(const Arg *arg);
+ static void tagmon(const Arg *arg);
+ static void tile(Monitor *m);
+ static void togglebar(const Arg *arg);
++static void toggleborder(const Arg *arg);
+ static void togglefloating(const Arg *arg);
+ static void togglefullscr(const Arg *arg);
+ static void toggletag(const Arg *arg);
+@@ -1921,6 +1922,15 @@ togglebar(const Arg *arg)
+ 	arrange(selmon);
+ }
+ 
++void
++toggleborder(const Arg *arg)
++{
++	if (selmon && selmon->sel) {
++		selmon->sel->bw = (selmon->sel->bw == borderpx ? 0 : borderpx);
++		arrange(selmon);
++	}
++}
++
+ void
+ togglefloating(const Arg *arg)
+ {
