@@ -13,6 +13,7 @@ vanitygaps - The one with extra layouts.
 cyclelayouts
 stacker - Removed several shortcuts I don't use.
 winicon - You'll need Imlib2 installed
+toggleborder (custom version that avoids crashes) - Use super+ctrl+b to toggle the focused window's border.
 
 Requirements
 ------------
