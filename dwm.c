@@ -1929,8 +1929,11 @@ toggleborder(const Arg *arg)
 {
 	if (selmon && selmon->sel) {
 		Client *c = selmon->sel;
+		if (c->isfullscreen)
+			return;
 		int prev_bw = c->bw;
 		c->bw = c->bw == borderpx ? 0 : borderpx;
+		c->oldbw = c->bw;
 		int border_adjust = 2*(c->bw - prev_bw);
 		if (prev_bw <= 0)
 			border_adjust = border_adjust * -1;
