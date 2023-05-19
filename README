@@ -7,7 +7,7 @@ xresources
 alpha
 pertag
 removeborder
-reloadxresources - A custom patch by me. Press MOD-r to reload Xresources colors.
+reloadxresources - A custom patch by me. Press MOD-r to reload Xresources colors and fonts
 actualfullscreen
 vanitygaps - The one with extra layouts.
 cyclelayouts
