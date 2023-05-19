@@ -12,9 +12,15 @@ static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
 #define ICONSIZE 16   /* icon size */
 #define ICONSPACING 5 /* space between icon and title */
-static char font[]            = "monospace:size=10";
-static char dmenufont[]       = "monospace:size=10";
-static const char *fonts[]          = { font };
+//change these to set the font, or use xresources
+static char defaultfont[] = "monospace:size=10";
+static char defaultdmenufont[] = "monospace:size=10";
+//
+static char *font            = NULL; //don't change this
+static char *dmenufont       = NULL; //or this
+//the first element of fonts should be NULL, it gets overwritten on startup by defaultfont
+static char *fonts[]          = { NULL };
+//
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
@@ -96,15 +102,16 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selbgcolor, NULL };
+static int dmenucmd_dmenufont_pos = 4; // the position at which to insert dmenufont, -1 if it doesn't exist.
+static char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", NULL, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selbgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 /*
  * Xresources preferences to load at startup
  */
 ResourcePref resources[] = {
-		{ "font",               STRING,  &font },
-		{ "dmenufont",          STRING,  &dmenufont },
+		{ "font",               DYNAMIC_STRING,  &font },
+		{ "dmenufont",          DYNAMIC_STRING,  &dmenufont },
 		{ "normbgcolor",        STRING,  &normbgcolor },
 		{ "normbordercolor",    STRING,  &normbordercolor },
 		{ "normfgcolor",        STRING,  &normfgcolor },

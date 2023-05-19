@@ -2537,13 +2537,54 @@ load_xresources(void)
 }
 
 void
+font_variables_update() {
+	fonts[0] = font;
+	if (dmenucmd_dmenufont_pos >= 0) {
+		dmenucmd[dmenucmd_dmenufont_pos] = dmenufont;
+	}
+}
+
+void
 reload_xresources(const Arg * arg)
 {
 	load_xresources();
+	font_variables_update();
+	//colors
 	for (int i = 0; i < LENGTH(colors); i++)
 		scheme[i] = drw_scm_create(drw, colors[i], alphas[i], 3);
+	//font
+	drw = drw_create(dpy, screen, root, sw, sh, visual, depth, cmap);
+	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
+		die("no fonts could be loaded.");
+	lrpad = drw->fonts->h;
+	bh = drw->fonts->h + 2;
+	updategeom();
+	//bars
+	updatebars();
+	updatestatus();
+	Monitor *m;
+	for (m = mons; m; m = m->next){
+		updatebarpos(m);
+		XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, m->ww, bh);
+	}
+	//
 	focus(NULL);
 	arrange(NULL);
+}
+
+void
+font_variables_init() {
+	font = malloc(sizeof(defaultfont));
+	strcpy(font, defaultfont);
+	dmenufont = malloc(sizeof(defaultfont));
+	strcpy(dmenufont, defaultdmenufont);
+	font_variables_update();
+}
+
+void
+font_variables_cleanup() {
+	free(font);
+	free(dmenufont);
 }
 
 int
@@ -2557,9 +2598,11 @@ main(int argc, char *argv[])
 		fputs("warning: no locale support\n", stderr);
 	if (!(dpy = XOpenDisplay(NULL)))
 		die("dwm: cannot open display");
+	font_variables_init();
 	checkotherwm();
 	XrmInitialize();
 	load_xresources();
+	font_variables_update();
 	setup();
 #ifdef __OpenBSD__
 	if (pledge("stdio rpath proc exec", NULL) == -1)
@@ -2568,6 +2611,7 @@ main(int argc, char *argv[])
 	scan();
 	run();
 	cleanup();
+	font_variables_cleanup();
 	XCloseDisplay(dpy);
 	return EXIT_SUCCESS;
 }
