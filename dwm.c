@@ -163,7 +163,8 @@ typedef struct {
 enum resource_type {
 	STRING = 0,
 	INTEGER = 1,
-	FLOAT = 2
+	FLOAT = 2,
+	DYNAMIC_STRING = 3
 };
 
 typedef struct {
@@ -2480,10 +2481,12 @@ resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
 	char *sdst = NULL;
 	int *idst = NULL;
 	float *fdst = NULL;
+	char **dsdst = NULL;
 
 	sdst = dst;
 	idst = dst;
 	fdst = dst;
+	dsdst = dst;
 
 	char fullname[256];
 	char *type;
@@ -2504,6 +2507,11 @@ resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst)
 			break;
 		case FLOAT:
 			*fdst = strtof(ret.addr, NULL);
+			break;
+		case DYNAMIC_STRING: //ptr to a ptr to a string
+			free(*dsdst);
+			*dsdst = malloc(ret.size);
+			strcpy(*dsdst, ret.addr);
 			break;
 		}
 	}
