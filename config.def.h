@@ -103,7 +103,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static int dmenucmd_dmenufont_pos = 4; // the position at which to insert dmenufont, -1 if it doesn't exist.
-static char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", NULL, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selbgcolor, NULL };
+static char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", "", "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selbgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 /*
