@@ -1742,9 +1742,31 @@ setmfact(const Arg *arg)
 }
 
 void
+setup_colors() {
+	int i;
+	for (i = 0; i < LENGTH(colors); i++)
+		scheme[i] = drw_scm_create(drw, colors[i], alphas[i], 3);
+}
+
+void
+setup_fonts() {
+	drw = drw_create(dpy, screen, root, sw, sh, visual, depth, cmap);
+	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
+		die("no fonts could be loaded.");
+	lrpad = drw->fonts->h;
+	bh = drw->fonts->h + 2;
+	updategeom();
+}
+
+void
+setup_bars() {
+	updatebars();
+	updatestatus();
+}
+
+void
 setup(void)
 {
-	int i;
 	XSetWindowAttributes wa;
 	Atom utf8string;
 
@@ -1757,11 +1779,7 @@ setup(void)
 	sh = DisplayHeight(dpy, screen);
 	root = RootWindow(dpy, screen);
 	xinitvisual();
-	drw = drw_create(dpy, screen, root, sw, sh, visual, depth, cmap);
-	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
-		die("no fonts could be loaded.");
-	lrpad = drw->fonts->h;
-	bh = drw->fonts->h + 2;
+	setup_fonts();
 	updategeom();
 	/* init atoms */
 	utf8string = XInternAtom(dpy, "UTF8_STRING", False);
@@ -1785,11 +1803,9 @@ setup(void)
 	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
 	/* init appearance */
 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
-	for (i = 0; i < LENGTH(colors); i++)
-		scheme[i] = drw_scm_create(drw, colors[i], alphas[i], 3);
+	setup_colors();
 	/* init bars */
-	updatebars();
-	updatestatus();
+	setup_bars();
 	/* supporting window for NetWMCheck */
 	wmcheckwin = XCreateSimpleWindow(dpy, root, 0, 0, 1, 1, 0, 0, 0);
 	XChangeProperty(dpy, wmcheckwin, netatom[NetWMCheck], XA_WINDOW, 32,
@@ -2550,24 +2566,16 @@ reload_xresources(const Arg * arg)
 	load_xresources();
 	font_variables_update();
 	//colors
-	for (int i = 0; i < LENGTH(colors); i++)
-		scheme[i] = drw_scm_create(drw, colors[i], alphas[i], 3);
+	setup_colors();
 	//font
-	drw = drw_create(dpy, screen, root, sw, sh, visual, depth, cmap);
-	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
-		die("no fonts could be loaded.");
-	lrpad = drw->fonts->h;
-	bh = drw->fonts->h + 2;
-	updategeom();
+	setup_fonts();
 	//bars
-	updatebars();
-	updatestatus();
+	setup_bars();
 	Monitor *m;
 	for (m = mons; m; m = m->next){
 		updatebarpos(m);
 		XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, m->ww, bh);
 	}
-	//
 	focus(NULL);
 	arrange(NULL);
 }
